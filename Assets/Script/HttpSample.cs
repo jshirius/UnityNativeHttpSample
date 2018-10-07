@@ -56,7 +56,8 @@ public class HttpSample : MonoBehaviour {
 		//Native側のHTTPリクエスト
 		Debug.Log("OnNativeButton start");
 
-		MakeSampleData();
+		string str = MakeSampleData();
+		HttpNativePlugin.HttpRequest(Url,str);
 
 		Debug.Log("OnNativeButton end");
 	}
@@ -97,11 +98,15 @@ public class HttpSample : MonoBehaviour {
 	{
     	Debug.Log("OnApplicationPause:" + pauseStatus);
 
-		//ここまでは、Androidでpause状態にしても動く
-		string str = MakeSampleData();
+		if(pauseStatus == true){
+			//ここまでは、Androidでpause状態にしても動く
+			string str = MakeSampleData();
 
-		//さてHTTPはどうかな？
-		StartCoroutine(UnityWebRequestDownload(str));
+			//さてHTTPはどうかな？
+			//StartCoroutine(UnityWebRequestDownload(str));
+			HttpNativePlugin.HttpRequest(Url,str);
+		}
+
 
 		
 
