@@ -10,7 +10,7 @@ public class HttpNativePlugin  {
 
 		//あとコールバック先のゲームオブジェクト名とメソッド名
 		//リトライ数
-		unityPlayer.CallStatic("HttpRequest",url,1,postdata);
+		unityPlayer.CallStatic("HttpRequest",url,postdata);
 #endif
 	}
 }

@@ -4,8 +4,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
-using ICSharpCode.SharpZipLib.Core;
-using ICSharpCode.SharpZipLib.GZip;
 using System.IO;
 using System.Text;
 using UnityEngine.Networking;
@@ -83,15 +81,7 @@ public class HttpSample : MonoBehaviour {
 		string json = JsonUtility.ToJson(addressList);
 
 
-		//圧縮
-		string gzip = "";
-		for(int i = 0 ; i < 20 ;i++){
-			gzip = ConvertCompressGZipBase64(json);
-			Debug.Log("Send data:" + gzip);
-		}
-		
-
-		return gzip;
+		return json;
 	}
 
 	private void OnApplicationPause( bool pauseStatus )
@@ -99,40 +89,18 @@ public class HttpSample : MonoBehaviour {
     	Debug.Log("OnApplicationPause:" + pauseStatus);
 
 		if(pauseStatus == true){
-			//ここまでは、Androidでpause状態にしても動く
+			//データ作成する
 			string str = MakeSampleData();
 
-			//さてHTTPはどうかな？
-			//StartCoroutine(UnityWebRequestDownload(str));
+			//ネイティブ側の通信処理を呼び出す
 			HttpNativePlugin.HttpRequest(Url,str);
 		}
 
-
-		
-
-		//ネットの渡す
-		//Debug.Log("OnApplicationPause:End:" + pauseStatus);
 	}
 
-	/**
-	* Gzip形式で圧縮し、Base64形式で返す
-	* @param  変換前文字列
-	* @result  圧縮した文字列にBase64形式変換した文字列
-	*/ 
-	protected string ConvertCompressGZipBase64(string rawData){
-		//エンコード
-		byte[] source = Encoding.UTF8.GetBytes(rawData);	
-		
-		//圧縮
-		byte[]bs = 	CompressGZip(source);
-		
-		//ToBase64　変換
-		return System.Convert.ToBase64String(bs);
-	}
+
 
     //UnityWebRequestでhttpリクエストを実装する
-    //UnityWebRequestには、タイムアウト処理が実装されており
-    //UnityWebRequestのメンバー変数timeoutに整数を設定するだけです
     IEnumerator UnityWebRequestDownload(string sendData) {
 
     	WWWForm form = new WWWForm();
@@ -152,26 +120,4 @@ public class HttpSample : MonoBehaviour {
         Debug.Log(www.downloadHandler.text + " " + System.DateTime.Now.ToString());
   	}
 
-
-	/**
-		* 文字列をgzip形式で圧縮する
-		* @param  圧縮元のbyte列
-		* @return 圧縮後のbyte列
-		*/
-	public static byte[] CompressGZip(byte[] source){
-		byte[] destination = null;
-		using (MemoryStream ms = new MemoryStream()){
-			//圧縮する
-			GZipOutputStream s = new GZipOutputStream(ms);
-			
-			// ストリームに圧縮するデータを書き込みます 
-			s.Write(source, 0, source.Length); 
-			s.Close(); 
-			
-			// 圧縮されたデータを バイト配列で取得します 
-			destination = ms.ToArray(); 
-		}
-		
-		return destination;
-	}	
 }
