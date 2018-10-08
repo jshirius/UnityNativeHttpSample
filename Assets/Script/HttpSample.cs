@@ -80,7 +80,7 @@ public class HttpSample : MonoBehaviour {
 		//Jsonに変換
 		string json = JsonUtility.ToJson(addressList);
 
-
+		Debug.Log("MakeSampleData dataLength:" + json.Length);
 		return json;
 	}
 
