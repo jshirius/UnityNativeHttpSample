@@ -10,8 +10,9 @@
 #import "HttpNative.h"
 
 void _UnityHttpRequest(char* url, char* postData){
-    NSString     *nsUrl   = [NSString stringWithUTF8String: url];
-    NSString     *nsPostData   = [NSString stringWithUTF8String: postData];
+    
+    NSString     *nsUrl   = [[ NSString alloc ]  initWithUTF8String: url];
+    NSString     *nsPostData   = [[ NSString alloc ] initWithUTF8String: postData] ;
     
     //Http処理
     //[HttpNative httpPostWithUnityCallback:@"sss"] ;
